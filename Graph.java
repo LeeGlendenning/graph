@@ -23,7 +23,7 @@ public class Graph {
     
     private static void test(){
         ArrayList<Point> p = new ArrayList();
-        LineGraph lg = new LineGraph(p, "X", "Y", Color.BLUE);
+        LineGraph lg = new LineGraph(p, "Test Graph", "X axis title", "Y", Color.BLUE);
         
         JFrame f = new JFrame("A Graph");
         f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
