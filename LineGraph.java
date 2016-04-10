@@ -10,6 +10,10 @@ To Do:
     1. consider: if jpanel gets too small (where titles are overlapping axes), don't draw axes titles
     2. figure out how to get width of string in particular font and size. then use that to centre titles
     3. figure out how to draw strings vertically. for y axis title
+    4. draw more noticeable point (bigger) in drawPoints()
+
+Note:
+    1. 20 pixels seems like a nice distance between points. Consider setting this as minimum or at least scale spacing to it (i.e. when window resizes)
 
 */
 
@@ -33,6 +37,7 @@ public class LineGraph extends JPanel {
     String xAxis;
     String yAxis;
     Color colour;
+    int BORDER_OFFSET;
 
     /*
      * LineGraph constructor creates a LineGraph object to be drawn to the screen
@@ -66,12 +71,12 @@ public class LineGraph extends JPanel {
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
         
-        int BORDER_OFFSET = (int) (0.1*Math.min(this.getBounds().width, this.getBounds().height)); // number of pixels from border to draw axes of graph. 10% of min(width, height)
+        BORDER_OFFSET = (int) (0.1*Math.min(this.getBounds().width, this.getBounds().height)); // number of pixels from border to draw axes of graph. 10% of min(width, height)
         
         g.setColor(Color.BLACK);
         
         //draw title for line graph
-        g.drawString(title, BORDER_OFFSET, BORDER_OFFSET);
+        g.drawString(title, BORDER_OFFSET + 50, BORDER_OFFSET); // +50 is just so it looks centered for now
         
         // draw x axis for line graph
         g.drawLine(BORDER_OFFSET, this.getBounds().height - BORDER_OFFSET, this.getBounds().width - BORDER_OFFSET, this.getBounds().height - BORDER_OFFSET); // x1, y1, x2, y2
@@ -82,9 +87,21 @@ public class LineGraph extends JPanel {
         //g.drawString(yAxis, , );
         
         
+        drawPoints(g);
         
         
         System.out.println("width: "+this.getBounds().width + ", height: "+this.getBounds().height+". border offset: " + BORDER_OFFSET);
     }
-
+    
+    private void drawPoints(Graphics g){
+        for (int i = 0; i < points.size(); i ++) {
+            // draw points
+            //g.drawLine(BORDER_OFFSET + points.get(i).x, 100 - points.get(i).y, BORDER_OFFSET + points.get(i).x, 100 - points.get(i).y);
+            
+            if (i < points.size() - 1){ // so only a point gets drawn in the last iteration
+                g.drawLine(BORDER_OFFSET + points.get(i).x, (this.getBounds().height - BORDER_OFFSET) - points.get(i).y, BORDER_OFFSET + points.get(i+1).x, (this.getBounds().height - BORDER_OFFSET) - points.get(i+1).y);
+            }
+        }
+    }
+    
 }
