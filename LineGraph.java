@@ -35,8 +35,7 @@ public class LineGraph extends JPanel {
     ArrayList<Point> points;
     String title, xAxis, yAxis;
     Color colour;
-    // min and max values used for creating axes and scaling their size
-    Integer maxX, maxY, minX, minY; // Integer object because could be null if points is empty
+    int maxX, maxY, minX, minY; // min and max values used for creating axes and scaling their size
     int BORDER_OFFSET;
 
     /*
@@ -68,10 +67,10 @@ public class LineGraph extends JPanel {
         this.points = new ArrayList();
         this.xAxis = "";
         this.yAxis = "";
-        this.maxX = null;
-        this.maxY = null;
-        this.minX = null;
-        this.minY = null;
+        this.maxX = 0;
+        this.maxY = 0;
+        this.minX = 0;
+        this.minY = 0;
         this.colour = Color.BLACK;
     }
     
@@ -139,7 +138,7 @@ public class LineGraph extends JPanel {
     
     private Point getMaxXY(){
         if (points.isEmpty()){
-            return null;
+            return new Point(0, 0);
         }
         Point max = new Point(points.get(0).x, points.get(0).y);
         for (int i = 1; i < points.size(); i ++){
@@ -155,7 +154,7 @@ public class LineGraph extends JPanel {
     
     private Point getMinXY(){
         if (points.isEmpty()){
-            return null;
+            return new Point(0, 0);
         }
         Point min = new Point(points.get(0).x, points.get(0).y);
         for (int i = 1; i < points.size(); i ++){
