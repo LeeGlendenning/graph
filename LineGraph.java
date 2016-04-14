@@ -33,10 +33,10 @@ import javax.swing.JPanel;
 public class LineGraph extends JPanel {
 
     ArrayList<Point> points;
-    String title;
-    String xAxis;
-    String yAxis;
+    String title, xAxis, yAxis;
     Color colour;
+    // min and max values used for creating axes and scaling their size
+    Integer maxX, maxY, minX, minY; // Integer object because could be null if points is empty
     int BORDER_OFFSET;
 
     /*
@@ -54,6 +54,10 @@ public class LineGraph extends JPanel {
         this.xAxis = xAxis;
         this.yAxis = yAxis;
         this.colour = colour;
+        this.maxX = getMaxXY().x;
+        this.maxY = getMaxXY().y;
+        this.minX = getMinXY().x;
+        this.minY = getMinXY().y;
         this.setBorder(BorderFactory.createLineBorder(Color.BLACK));
     }
 
@@ -64,6 +68,10 @@ public class LineGraph extends JPanel {
         this.points = new ArrayList();
         this.xAxis = "";
         this.yAxis = "";
+        this.maxX = null;
+        this.maxY = null;
+        this.minX = null;
+        this.minY = null;
         this.colour = Color.BLACK;
     }
     
@@ -119,4 +127,45 @@ public class LineGraph extends JPanel {
         }
     }
     
+    public void addPoint(int x, int y){
+        points.add(new Point(x, y));
+        if (x > maxX){
+            maxX = x;
+        }
+        if (y > maxY){
+            maxY = y;
+        }
+    }
+    
+    private Point getMaxXY(){
+        if (points.isEmpty()){
+            return null;
+        }
+        Point max = new Point(points.get(0).x, points.get(0).y);
+        for (int i = 1; i < points.size(); i ++){
+            if (points.get(i).x > max.x){
+                max.x = points.get(i).x;
+            }
+            if (points.get(i).y > max.y){
+                max.y = points.get(i).y;
+            }
+        }
+        return max;
+    }
+    
+    private Point getMinXY(){
+        if (points.isEmpty()){
+            return null;
+        }
+        Point min = new Point(points.get(0).x, points.get(0).y);
+        for (int i = 1; i < points.size(); i ++){
+            if (points.get(i).x < min.x){
+                min.x = points.get(i).x;
+            }
+            if (points.get(i).y < min.y){
+                min.y = points.get(i).y;
+            }
+        }
+        return min;
+    }
 }
