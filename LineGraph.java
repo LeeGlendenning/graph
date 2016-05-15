@@ -33,10 +33,9 @@ import javax.swing.BorderFactory;
 public class LineGraph extends Graph {
 
     ArrayList<Point> points;
-    String title, xAxis, yAxis;
-    Color colour;
-    int maxX, maxY, minX, minY; // min and max values used for creating axes and scaling their size
-    int BORDER_OFFSET;
+    
+    private int maxX, maxY, minX, minY; // min and max values used for creating axes and scaling their size
+    private int BORDER_OFFSET;
 
     /*
      * LineGraph constructor creates a LineGraph object to be drawn to the screen
@@ -50,14 +49,11 @@ public class LineGraph extends Graph {
     public LineGraph(ArrayList<Point> points, String title, String xAxis, String yAxis, Color colour) {
         this.points = points;
         this.title = title;
-        this.xAxis = xAxis;
-        this.yAxis = yAxis;
+        this.xAxisLabel = xAxis;
+        this.yAxisLabel = yAxis;
         this.colour = colour;
-        this.maxX = getMaxXY().x;
-        this.maxY = getMaxXY().y;
-        this.minX = getMinXY().x;
-        this.minY = getMinXY().y;
-        this.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+        init(); // set man/min xy and border for this JComponent
+        
     }
 
     /*
@@ -65,13 +61,21 @@ public class LineGraph extends Graph {
      */
     public LineGraph() {
         this.points = new ArrayList();
-        this.xAxis = "";
-        this.yAxis = "";
+        this.xAxisLabel = "";
+        this.yAxisLabel = "";
         this.maxX = 0;
         this.maxY = 0;
         this.minX = 0;
         this.minY = 0;
         this.colour = Color.BLACK;
+    }
+    
+    private void init(){
+        this.maxX = getMaxXY().x;
+        this.maxY = getMaxXY().y;
+        this.minX = getMinXY().x;
+        this.minY = getMinXY().y;
+        this.setBorder(BorderFactory.createLineBorder(Color.BLACK));
     }
     
     @Override
@@ -107,10 +111,10 @@ public class LineGraph extends Graph {
         g.drawString(title, BORDER_OFFSET + 50, BORDER_OFFSET); // +50 is just so it looks centered for now
         
         // draw x axis label
-        g.drawString(xAxis, BORDER_OFFSET, this.getBounds().height - BORDER_OFFSET/4);
+        g.drawString(xAxisLabel, BORDER_OFFSET, this.getBounds().height - BORDER_OFFSET/4);
         
         // draw y axis label
-        //g.drawString(yAxis, , );
+        //g.drawString(yAxisLabel, , );
     }
     
     protected void drawPoints(Graphics g){
@@ -138,6 +142,7 @@ public class LineGraph extends Graph {
         }
     }
     
+    @Override
     protected Point getMaxXY(){
         if (points.isEmpty()){
             return new Point(0, 0);
@@ -170,4 +175,7 @@ public class LineGraph extends Graph {
         }
         return min;
     }
+    
+    
+    
 }
