@@ -11,6 +11,7 @@ To Do:
     2. figure out how to get width of string in particular font and size. then use that to centre titles
     3. figure out how to draw strings vertically. for y axis title
     4. draw more noticeable point (bigger) in drawPoints()
+    5. draw light gray mesh to mark ticks
 
 Note:
     1. 20 pixels seems like a nice distance between points. Consider setting this as minimum or at least scale spacing to it (i.e. when window resizes)
@@ -23,14 +24,13 @@ import java.awt.Graphics;
 import java.awt.Point;
 import java.util.ArrayList;
 import javax.swing.BorderFactory;
-import javax.swing.JPanel;
 
 /**
  *
  * LineGraph class should extend Graph which should extend JComponent but for
  * now we will skip that
  */
-public class LineGraph extends JPanel {
+public class LineGraph extends Graph {
 
     ArrayList<Point> points;
     String title, xAxis, yAxis;
@@ -88,7 +88,8 @@ public class LineGraph extends JPanel {
         System.out.println("width: "+this.getBounds().width + ", height: "+this.getBounds().height+". border offset: " + BORDER_OFFSET);
     }
     
-    private void drawAxes(Graphics g){
+    @Override
+    protected void drawAxes(Graphics g){
         g.setColor(Color.BLACK);
         
         // draw x axis for line graph
@@ -98,7 +99,8 @@ public class LineGraph extends JPanel {
         g.drawLine(BORDER_OFFSET, BORDER_OFFSET, BORDER_OFFSET, this.getBounds().height - BORDER_OFFSET); // x1, y1, x2, y2
     }
     
-    private void drawTitles(Graphics g){
+    @Override
+    protected void drawTitles(Graphics g){
         g.setColor(Color.BLACK);
         
         // draw title for line graph
@@ -111,7 +113,7 @@ public class LineGraph extends JPanel {
         //g.drawString(yAxis, , );
     }
     
-    private void drawPoints(Graphics g){
+    protected void drawPoints(Graphics g){
         g.setColor(colour);
         
         for (int i = 0; i < points.size(); i ++) {
@@ -136,7 +138,7 @@ public class LineGraph extends JPanel {
         }
     }
     
-    private Point getMaxXY(){
+    protected Point getMaxXY(){
         if (points.isEmpty()){
             return new Point(0, 0);
         }
@@ -152,7 +154,8 @@ public class LineGraph extends JPanel {
         return max;
     }
     
-    private Point getMinXY(){
+    @Override
+    protected Point getMinXY(){
         if (points.isEmpty()){
             return new Point(0, 0);
         }
