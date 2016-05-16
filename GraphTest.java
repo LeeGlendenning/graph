@@ -28,12 +28,12 @@ public class GraphTest {
         ArrayList<Point> p = new ArrayList();
         p.add(new Point(-40,20));
         p.add(new Point(-20,10));
-        p.add(new Point(50,90));
+        /*p.add(new Point(50,90));
         p.add(new Point(70,40));
         p.add(new Point(90,150));
         p.add(new Point(110,140));
         p.add(new Point(130,110));
-        p.add(new Point(150,110));
+        p.add(new Point(150,110));*/
         LineGraph lg = new LineGraph(p, "Test Graph", "X axis title", "Y", Color.BLUE);
         
         JFrame f = new JFrame("A Graph");

@@ -14,6 +14,8 @@ To Do:
     5. draw light gray mesh to mark ticks
     6. implement sortPointsByX method
     7. assert points do not have same x value (consider doing this in addPoint method)
+    8. Idk why but the updateMinMax call in drawGraph needs to be there to work. Figure out why
+    9. drawAxes y on right side not working
 
 Note:
     
@@ -89,7 +91,7 @@ public class LineGraph extends Graph {
     
     @Override
     protected void updateGraph(Graphics g){
-        drawAxes(g);
+        //drawAxes(g);
         drawTitles(g);
         drawGraph(g);
     }
@@ -128,7 +130,7 @@ public class LineGraph extends Graph {
     
     @Override
     protected void drawGraph(Graphics g){
-        g.setColor(colour);
+        
         sortPointsByX(); // drawing line between points assumes points are sorted by x value
         updateMinMax();
         
@@ -141,6 +143,12 @@ public class LineGraph extends Graph {
         float xSpacing = ((float)this.getBounds().width / ptWidth); // size of intervals along x axis
         float ySpacing = ((float)this.getBounds().height / ptHeight); // size of intervals along y axis
         
+        drawPoints(g, xBuff, yBuff, ptWidth, ptHeight, xSpacing, ySpacing);
+        drawAxes(g, xBuff, yBuff, ptWidth, ptHeight, xSpacing, ySpacing);
+    }
+    
+    private void drawPoints(Graphics g, int xBuff, int yBuff, int ptWidth, int ptHeight, float xSpacing, float ySpacing){
+        g.setColor(colour);
         //System.out.println("Drawing points at:");
         for (int i = 0; i < points.size() - 1; i ++){
             int xDiff = points.get(i).x - minX + xBuff;
@@ -151,6 +159,22 @@ public class LineGraph extends Graph {
             // draw line connected 2 points
             g.drawLine(Math.round(xDiff * xSpacing), this.getBounds().height - Math.round(yDiff * ySpacing), Math.round(xDiffNext * xSpacing), this.getBounds().height - Math.round(yDiffNext * ySpacing));
             //System.out.println(i + ": " + Math.round(xDiff * xSpacing) + ", " + (this.getBounds().height - Math.round(yDiff * ySpacing)));
+        }
+    }
+    
+    private void drawAxes(Graphics g, int xBuff, int yBuff, int ptWidth, int ptHeight, float xSpacing, float ySpacing){
+        g.setColor(Color.BLACK);
+        //System.out.println("minX = " + minX + ", maxX = " + maxX);
+        
+        // draw x axis
+        if (minX < 0 && maxX > 0){
+            int xDiff = -minX + xBuff;
+            g.drawLine(Math.round(xDiff * xSpacing), this.getBounds().height - yBuff, Math.round(xDiff * xSpacing), yBuff);
+
+        }else if (minX <= 0){ // this is not working
+            g.drawLine(this.getBounds().width - xBuff, this.getBounds().height - yBuff, this.getBounds().width - xBuff, yBuff);
+        }else if (maxX >= 0){
+            g.drawLine(xBuff, this.getBounds().height - yBuff, xBuff, yBuff);
         }
     }
     
