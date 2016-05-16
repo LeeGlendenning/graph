@@ -12,10 +12,11 @@ To Do:
     3. figure out how to draw strings vertically. for y axis title
     4. draw more noticeable point (bigger) in drawPoints()
     5. draw light gray mesh to mark ticks
+    6. implement sortPointsByX method
+    7. assert points do not have same x value (consider doing this in addPoint method)
 
 Note:
-    1. 20 pixels seems like a nice distance between points. Consider setting this as minimum or at least scale spacing to it (i.e. when window resizes)
-
+    
 */
 
 
@@ -83,8 +84,6 @@ public class LineGraph extends Graph {
         
         updateGraph(g);
         
-        
-        
         //System.out.println("width: "+this.getBounds().width + ", height: "+this.getBounds().height+". border offset: " + borderOffset);
     }
     
@@ -130,53 +129,32 @@ public class LineGraph extends Graph {
     @Override
     protected void drawGraph(Graphics g){
         g.setColor(colour);
+        sortPointsByX(); // drawing line between points assumes points are sorted by x value
         updateMinMax();
-        
-        /*for (int i = 0; i < points.size(); i ++) {
-            // draw just the points
-            //g.drawLine(borderOffset + points.get(i).x, 100 - points.get(i).y, borderOffset + points.get(i).x, 100 - points.get(i).y);
-            
-            
-            if (i < points.size() - 1){ // don't want to draw a line from the last point to nothing. Will make sense when points are drawn bigger (commented line above)
-                // draw line connected 2 points
-                g.drawLine(borderOffset + points.get(i).x, (this.getBounds().height - borderOffset) - points.get(i).y, borderOffset + points.get(i+1).x, (this.getBounds().height - borderOffset) - points.get(i+1).y);
-            }
-        }*/
         
         int xBuff = Math.round((float)0.1*(maxX - minX)); // 10% of difference between maxX and minX
         int yBuff = Math.round((float)0.1*(maxY - minY)); // 10% of difference between maxY and minY
-        //int xBuff = Math.round((float)0.1*this.getBounds().width);
-        //int yBuff = Math.round((float)0.1*this.getBounds().height);
-        System.out.println("xBuff: " + xBuff + ", yBuff: " + yBuff);
         
         int ptWidth = (maxX - minX) + 2*xBuff; // divide graph into ptWidth number of intervals along x axis
         int ptHeight = (maxY - minY) + 2*yBuff; // divide graph into ptHeight number of intervals along y axis
-        System.out.println("ptWidth: " + ptWidth + ", ptHeight: " + ptHeight);
         
         float xSpacing = ((float)this.getBounds().width / ptWidth); // size of intervals along x axis
         float ySpacing = ((float)this.getBounds().height / ptHeight); // size of intervals along y axis
-        System.out.println("xSpacing: " + this.getBounds().width + "/" + ptWidth + " = " + xSpacing + ", ySpacing: " + ySpacing);
         
-        System.out.println("Drawing points at:");
-        for (int i = 0; i < points.size(); i ++){
-            // draw just the points
-            //g.drawLine(borderOffset + points.get(i).x, 100 - points.get(i).y, borderOffset + points.get(i).x, 100 - points.get(i).y);
-            
-            if (i < points.size() - 1){ // don't want to draw a line from the last point to nothing. Will make sense when points are drawn bigger (commented line above)
-                int xDiff = points.get(i).x - minX + xBuff;
-                int yDiff = points.get(i).y - minY + yBuff;
-                int xDiffNext = points.get(i+1).x - minX + xBuff;
-                int yDiffNext = points.get(i+1).y - minY + yBuff;
-            
-                // draw line connected 2 points
-                g.drawLine(Math.round(xDiff * xSpacing), this.getBounds().height - Math.round(yDiff * ySpacing), Math.round(xDiffNext * xSpacing), this.getBounds().height - Math.round(yDiffNext * ySpacing));
-                
-                System.out.println(i + ": " + Math.round(xDiff * xSpacing) + ", " + (this.getBounds().height - Math.round(yDiff * ySpacing)));
-            }
+        //System.out.println("Drawing points at:");
+        for (int i = 0; i < points.size() - 1; i ++){
+            int xDiff = points.get(i).x - minX + xBuff;
+            int yDiff = points.get(i).y - minY + yBuff;
+            int xDiffNext = points.get(i+1).x - minX + xBuff;
+            int yDiffNext = points.get(i+1).y - minY + yBuff;
+
+            // draw line connected 2 points
+            g.drawLine(Math.round(xDiff * xSpacing), this.getBounds().height - Math.round(yDiff * ySpacing), Math.round(xDiffNext * xSpacing), this.getBounds().height - Math.round(yDiffNext * ySpacing));
+            //System.out.println(i + ": " + Math.round(xDiff * xSpacing) + ", " + (this.getBounds().height - Math.round(yDiff * ySpacing)));
         }
     }
     
-    private void sortByX(){
+    private void sortPointsByX(){
         
     }
     
