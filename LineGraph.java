@@ -35,7 +35,7 @@ public class LineGraph extends Graph {
     ArrayList<Point> points;
     
     private int maxX, maxY, minX, minY; // min and max values used for creating axes and scaling their size
-    private int BORDER_OFFSET;
+    private int borderOffset;
 
     /*
      * LineGraph constructor creates a LineGraph object to be drawn to the screen
@@ -71,10 +71,7 @@ public class LineGraph extends Graph {
     }
     
     private void init(){
-        this.maxX = getMaxXY().x;
-        this.maxY = getMaxXY().y;
-        this.minX = getMinXY().x;
-        this.minY = getMinXY().y;
+        
         this.setBorder(BorderFactory.createLineBorder(Color.BLACK));
     }
     
@@ -82,14 +79,27 @@ public class LineGraph extends Graph {
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
         
-        BORDER_OFFSET = (int) (0.1*Math.min(this.getBounds().width, this.getBounds().height)); // number of pixels from border to draw axes of graph. 10% of min(width, height)
+        borderOffset = (int) (0.1*Math.min(this.getBounds().width, this.getBounds().height)); // number of pixels from border to draw axes of graph. 10% of min(width, height)
         
+        updateGraph(g);
+        
+        
+        
+        //System.out.println("width: "+this.getBounds().width + ", height: "+this.getBounds().height+". border offset: " + borderOffset);
+    }
+    
+    @Override
+    protected void updateGraph(Graphics g){
         drawAxes(g);
         drawTitles(g);
-        drawPoints(g);
-        
-        
-        System.out.println("width: "+this.getBounds().width + ", height: "+this.getBounds().height+". border offset: " + BORDER_OFFSET);
+        drawGraph(g);
+    }
+    
+    private void updateMinMax(){
+        this.maxX = getMaxXY().x;
+        this.maxY = getMaxXY().y;
+        this.minX = getMinXY().x;
+        this.minY = getMinXY().y;
     }
     
     @Override
@@ -97,10 +107,10 @@ public class LineGraph extends Graph {
         g.setColor(Color.BLACK);
         
         // draw x axis for line graph
-        g.drawLine(BORDER_OFFSET, this.getBounds().height - BORDER_OFFSET, this.getBounds().width - BORDER_OFFSET, this.getBounds().height - BORDER_OFFSET); // x1, y1, x2, y2
+        g.drawLine(borderOffset, this.getBounds().height - borderOffset, this.getBounds().width - borderOffset, this.getBounds().height - borderOffset); // x1, y1, x2, y2
         
         // draw y axis for line graph
-        g.drawLine(BORDER_OFFSET, BORDER_OFFSET, BORDER_OFFSET, this.getBounds().height - BORDER_OFFSET); // x1, y1, x2, y2
+        g.drawLine(borderOffset, borderOffset, borderOffset, this.getBounds().height - borderOffset); // x1, y1, x2, y2
     }
     
     @Override
@@ -108,28 +118,66 @@ public class LineGraph extends Graph {
         g.setColor(Color.BLACK);
         
         // draw title for line graph
-        g.drawString(title, BORDER_OFFSET + 50, BORDER_OFFSET); // +50 is just so it looks centered for now
+        g.drawString(title, borderOffset + 50, borderOffset); // +50 is just so it looks centered for now
         
         // draw x axis label
-        g.drawString(xAxisLabel, BORDER_OFFSET, this.getBounds().height - BORDER_OFFSET/4);
+        g.drawString(xAxisLabel, borderOffset, this.getBounds().height - borderOffset/4);
         
         // draw y axis label
         //g.drawString(yAxisLabel, , );
     }
     
-    protected void drawPoints(Graphics g){
+    @Override
+    protected void drawGraph(Graphics g){
         g.setColor(colour);
+        updateMinMax();
         
-        for (int i = 0; i < points.size(); i ++) {
+        /*for (int i = 0; i < points.size(); i ++) {
             // draw just the points
-            //g.drawLine(BORDER_OFFSET + points.get(i).x, 100 - points.get(i).y, BORDER_OFFSET + points.get(i).x, 100 - points.get(i).y);
+            //g.drawLine(borderOffset + points.get(i).x, 100 - points.get(i).y, borderOffset + points.get(i).x, 100 - points.get(i).y);
             
             
             if (i < points.size() - 1){ // don't want to draw a line from the last point to nothing. Will make sense when points are drawn bigger (commented line above)
                 // draw line connected 2 points
-                g.drawLine(BORDER_OFFSET + points.get(i).x, (this.getBounds().height - BORDER_OFFSET) - points.get(i).y, BORDER_OFFSET + points.get(i+1).x, (this.getBounds().height - BORDER_OFFSET) - points.get(i+1).y);
+                g.drawLine(borderOffset + points.get(i).x, (this.getBounds().height - borderOffset) - points.get(i).y, borderOffset + points.get(i+1).x, (this.getBounds().height - borderOffset) - points.get(i+1).y);
+            }
+        }*/
+        
+        int xBuff = Math.round((float)0.1*(maxX - minX)); // 10% of difference between maxX and minX
+        int yBuff = Math.round((float)0.1*(maxY - minY)); // 10% of difference between maxY and minY
+        //int xBuff = Math.round((float)0.1*this.getBounds().width);
+        //int yBuff = Math.round((float)0.1*this.getBounds().height);
+        System.out.println("xBuff: " + xBuff + ", yBuff: " + yBuff);
+        
+        int ptWidth = (maxX - minX) + 2*xBuff; // divide graph into ptWidth number of intervals along x axis
+        int ptHeight = (maxY - minY) + 2*yBuff; // divide graph into ptHeight number of intervals along y axis
+        System.out.println("ptWidth: " + ptWidth + ", ptHeight: " + ptHeight);
+        
+        float xSpacing = ((float)this.getBounds().width / ptWidth); // size of intervals along x axis
+        float ySpacing = ((float)this.getBounds().height / ptHeight); // size of intervals along y axis
+        System.out.println("xSpacing: " + this.getBounds().width + "/" + ptWidth + " = " + xSpacing + ", ySpacing: " + ySpacing);
+        
+        System.out.println("Drawing points at:");
+        for (int i = 0; i < points.size(); i ++){
+            // draw just the points
+            //g.drawLine(borderOffset + points.get(i).x, 100 - points.get(i).y, borderOffset + points.get(i).x, 100 - points.get(i).y);
+            
+            if (i < points.size() - 1){ // don't want to draw a line from the last point to nothing. Will make sense when points are drawn bigger (commented line above)
+                int xDiff = points.get(i).x - minX + xBuff;
+                int yDiff = points.get(i).y - minY + yBuff;
+                int xDiffNext = points.get(i+1).x - minX + xBuff;
+                int yDiffNext = points.get(i+1).y - minY + yBuff;
+            
+                // draw line connected 2 points
+                g.drawLine(Math.round(xDiff * xSpacing), this.getBounds().height - Math.round(yDiff * ySpacing), Math.round(xDiffNext * xSpacing), this.getBounds().height - Math.round(yDiffNext * ySpacing));
+                
+                System.out.println(i + ": " + Math.round(xDiff * xSpacing) + ", " + (this.getBounds().height - Math.round(yDiff * ySpacing)));
             }
         }
+    }
+    
+    private void sortByX(){
+        
     }
     
     public void addPoint(int x, int y){

@@ -23,6 +23,10 @@ public abstract class Graph extends JComponent {
     
     protected abstract Point getMinXY();
     
+    protected abstract void updateGraph(Graphics g);
+    
+    protected abstract void drawGraph(Graphics g);
+    
     protected String getTitle(){
         return this.title;
     }
