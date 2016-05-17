@@ -15,7 +15,7 @@ public abstract class Graph extends JComponent {
     protected String title, xAxisLabel, yAxisLabel;
     protected Color colour;
 
-    protected abstract void drawAxes(Graphics g);
+    //protected abstract void drawAxes(Graphics g);
     
     protected abstract void drawTitles(Graphics g);
     
