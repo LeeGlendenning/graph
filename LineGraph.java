@@ -9,7 +9,8 @@ package graph;
 To Do:
     1. figure out how to get width of string in particular font and size. then use that to centre titles
     2. figure out how to draw strings vertically. for y axis title
-    3. Idk why but the updateMinMax call in drawGraph needs to be there to work. Figure out why
+    3. draw ticks - figure out how to decide what increments to use
+    4. add ability to show multiple plots in same graph
 
 Consider:
     1. if jpanel gets too small (where titles are overlapping axes), don't draw axes titles
@@ -46,14 +47,14 @@ public class LineGraph extends Graph {
      * @param yAxis         String label for the y axis of the line graph
      * @param colour        Color object to use when drawing the line graph
      */
-    public LineGraph(ArrayList<Point> points, String title, String xAxis, String yAxis, Color colour) {
+    public LineGraph(ArrayList<Point> ps, String title, String xAxis, String yAxis, Color colour) {
         this.points = new ArrayList();
-        addPoints(points);
+        // points actually added in init
         this.title = title;
         this.xAxisLabel = xAxis;
         this.yAxisLabel = yAxis;
         this.colour = colour;
-        init(); // set man/min xy and border for this JComponent
+        init(ps); // set man/min xy and border for this JComponent
         
     }
 
@@ -71,8 +72,9 @@ public class LineGraph extends Graph {
         this.colour = Color.BLACK;
     }
     
-    private void init(){
+    private void init(ArrayList<Point> ps){
         this.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+        addPoints(ps);
     }
     
     @Override
@@ -93,12 +95,12 @@ public class LineGraph extends Graph {
         drawGraph(g);
     }
     
-    private void updateMinMax(){
+    /*private void updateMinMax(){
         this.maxX = getMaxXY().x;
         this.maxY = getMaxXY().y;
         this.minX = getMinXY().x;
         this.minY = getMinXY().y;
-    }
+    }*/
     
     @Override
     protected void drawTitles(Graphics g){
@@ -116,9 +118,8 @@ public class LineGraph extends Graph {
     
     @Override
     protected void drawGraph(Graphics g){
-        
         sortPointsByX(); // drawing line between points assumes points are sorted by x value
-        updateMinMax();
+        //updateMinMax();
         
         int xBuff = Math.round((float)0.1*(maxX - minX)); // 10% of difference between maxX and minX
         int yBuff = Math.round((float)0.1*(maxY - minY)); // 10% of difference between maxY and minY
@@ -209,10 +210,14 @@ public class LineGraph extends Graph {
         if (pointIsAllowed(p)){
             points.add(new Point(p.x, p.y));
             if (p.x > maxX){
-                maxX = p.x;
+                this.maxX = p.x;
+            }else if (p.x < minX){
+                this.minX = p.x;
             }
             if (p.y > maxY){
-                maxY = p.y;
+                this.maxY = p.y;
+            }else if (p.y < minY){
+                this.minY = p.y;
             }
         }
     }

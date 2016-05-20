@@ -42,6 +42,7 @@ public class GraphTest {
         p.add(new Point(130,110));
         p.add(new Point(150,110));
         p.add(new Point(-30,50));
+        p.add(new Point(-100, 0));
         
         LineGraph lg = new LineGraph(p, "Test Graph", "X axis title", "Y", Color.BLUE);
         
