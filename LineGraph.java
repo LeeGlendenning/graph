@@ -10,12 +10,11 @@ To Do:
     1. consider: if jpanel gets too small (where titles are overlapping axes), don't draw axes titles
     2. figure out how to get width of string in particular font and size. then use that to centre titles
     3. figure out how to draw strings vertically. for y axis title
-    4. draw more noticeable point (bigger) in drawPoints()
-    5. draw light gray mesh to mark ticks
+
+    5. consider drawing light gray mesh to mark ticks
     6. implement sortPointsByX method
     7. assert points do not have same x value (consider doing this in addPoint method)
     8. Idk why but the updateMinMax call in drawGraph needs to be there to work. Figure out why
-    9. drawAxes y on right side not working
 
 Note:
     
@@ -103,17 +102,6 @@ public class LineGraph extends Graph {
         this.minY = getMinXY().y;
     }
     
-    /*@Override
-    protected void drawAxes(Graphics g){
-        g.setColor(Color.BLACK);
-        
-        // draw x axis for line graph
-        g.drawLine(borderOffset, this.getBounds().height - borderOffset, this.getBounds().width - borderOffset, this.getBounds().height - borderOffset); // x1, y1, x2, y2
-        
-        // draw y axis for line graph
-        g.drawLine(borderOffset, borderOffset, borderOffset, this.getBounds().height - borderOffset); // x1, y1, x2, y2
-    }*/
-    
     @Override
     protected void drawTitles(Graphics g){
         g.setColor(Color.BLACK);
@@ -136,8 +124,6 @@ public class LineGraph extends Graph {
         
         int xBuff = Math.round((float)0.1*(maxX - minX)); // 10% of difference between maxX and minX
         int yBuff = Math.round((float)0.1*(maxY - minY)); // 10% of difference between maxY and minY
-        //int xBuff = Math.round((float)0.1*this.getBounds().width); // 10% of difference between maxX and minX
-        //int yBuff = Math.round((float)0.1*this.getBounds().height); // 10% of difference between maxY and minY
         
         int ptWidth = (maxX - minX) + 2*xBuff; // divide graph into ptWidth number of intervals along x axis
         int ptHeight = (maxY - minY) + 2*yBuff; // divide graph into ptHeight number of intervals along y axis
@@ -151,16 +137,20 @@ public class LineGraph extends Graph {
     
     private void drawPoints(Graphics g, int xBuff, int yBuff, int ptWidth, int ptHeight, float xSpacing, float ySpacing){
         g.setColor(colour);
-        //System.out.println("Drawing points at:");
-        for (int i = 0; i < points.size() - 1; i ++){
+        
+        for (int i = 0; i < points.size(); i ++){
             int xDiff = points.get(i).x - minX + xBuff;
             int yDiff = points.get(i).y - minY + yBuff;
             int xDiffNext = points.get(i+1).x - minX + xBuff;
             int yDiffNext = points.get(i+1).y - minY + yBuff;
-
-            // draw line connected 2 points
-            g.drawLine(Math.round(xDiff * xSpacing), this.getBounds().height - Math.round(yDiff * ySpacing), Math.round(xDiffNext * xSpacing), this.getBounds().height - Math.round(yDiffNext * ySpacing));
-            //System.out.println(i + ": " + Math.round(xDiff * xSpacing) + ", " + (this.getBounds().height - Math.round(yDiff * ySpacing)));
+            
+            //draw the point
+            g.fillOval(Math.round(xDiff * xSpacing)-2, this.getBounds().height - Math.round(yDiff * ySpacing)-2, 4, 4);
+            
+            if (i != points.size()-1){ // is last point, don't need to connect anymore points
+                // draw line connecting 2 points
+                g.drawLine(Math.round(xDiff * xSpacing), this.getBounds().height - Math.round(yDiff * ySpacing), Math.round(xDiffNext * xSpacing), this.getBounds().height - Math.round(yDiffNext * ySpacing));
+            }
         }
     }
     
