@@ -7,17 +7,16 @@ package graph;
 
 /*
 To Do:
-    1. consider: if jpanel gets too small (where titles are overlapping axes), don't draw axes titles
-    2. figure out how to get width of string in particular font and size. then use that to centre titles
-    3. figure out how to draw strings vertically. for y axis title
+    1. figure out how to get width of string in particular font and size. then use that to centre titles
+    2. figure out how to draw strings vertically. for y axis title
+    3. implement sortPointsByX method
+    4. assert points do not have same x value (consider doing this in addPoint method)
+    5. Idk why but the updateMinMax call in drawGraph needs to be there to work. Figure out why
+    6. implement sortPointsByX
 
-    5. consider drawing light gray mesh to mark ticks
-    6. implement sortPointsByX method
-    7. assert points do not have same x value (consider doing this in addPoint method)
-    8. Idk why but the updateMinMax call in drawGraph needs to be there to work. Figure out why
-
-Note:
-    
+Consider:
+    1. if jpanel gets too small (where titles are overlapping axes), don't draw axes titles
+    2. draw light gray mesh to mark ticks
 */
 
 
@@ -49,7 +48,8 @@ public class LineGraph extends Graph {
      * @param colour        Color object to use when drawing the line graph
      */
     public LineGraph(ArrayList<Point> points, String title, String xAxis, String yAxis, Color colour) {
-        this.points = points;
+        this.points = new ArrayList();
+        addPoints(points);
         this.title = title;
         this.xAxisLabel = xAxis;
         this.yAxisLabel = yAxis;
@@ -73,7 +73,6 @@ public class LineGraph extends Graph {
     }
     
     private void init(){
-        
         this.setBorder(BorderFactory.createLineBorder(Color.BLACK));
     }
     
@@ -141,13 +140,13 @@ public class LineGraph extends Graph {
         for (int i = 0; i < points.size(); i ++){
             int xDiff = points.get(i).x - minX + xBuff;
             int yDiff = points.get(i).y - minY + yBuff;
-            int xDiffNext = points.get(i+1).x - minX + xBuff;
-            int yDiffNext = points.get(i+1).y - minY + yBuff;
             
             //draw the point
             g.fillOval(Math.round(xDiff * xSpacing)-2, this.getBounds().height - Math.round(yDiff * ySpacing)-2, 4, 4);
             
             if (i != points.size()-1){ // is last point, don't need to connect anymore points
+                int xDiffNext = points.get(i+1).x - minX + xBuff;
+                int yDiffNext = points.get(i+1).y - minY + yBuff;
                 // draw line connecting 2 points
                 g.drawLine(Math.round(xDiff * xSpacing), this.getBounds().height - Math.round(yDiff * ySpacing), Math.round(xDiffNext * xSpacing), this.getBounds().height - Math.round(yDiffNext * ySpacing));
             }
@@ -187,14 +186,32 @@ public class LineGraph extends Graph {
         
     }
     
-    public void addPoint(int x, int y){
-        points.add(new Point(x, y));
-        if (x > maxX){
-            maxX = x;
+    public void addPoints(ArrayList<Point> ps){
+        for (int i = 0; i < ps.size(); i ++){
+            addPoint(ps.get(i));
         }
-        if (y > maxY){
-            maxY = y;
+    }
+    
+    public void addPoint(Point p){
+        if (pointIsAllowed(p)){
+            points.add(new Point(p.x, p.y));
+            if (p.x > maxX){
+                maxX = p.x;
+            }
+            if (p.y > maxY){
+                maxY = p.y;
+            }
         }
+    }
+    
+    // returns false if a point with the given x value already exists in points ArrayList
+    private boolean pointIsAllowed(Point p){
+        for (int i = 0; i < points.size(); i ++){
+            if (points.get(i).x == p.x){
+                return false;
+            }
+        }
+        return true;
     }
     
     @Override

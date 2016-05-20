@@ -30,6 +30,7 @@ public class GraphTest {
         p.add(new Point(0,-25));
         p.add(new Point(25,-15));*/
         p.add(new Point(-40,20));
+        p.add(new Point(-40,120)); // won't be plotted because x = -40 like last point
         p.add(new Point(-30,50));
         p.add(new Point(-25,5));
         p.add(new Point(-20,10));
