@@ -9,10 +9,7 @@ package graph;
 To Do:
     1. figure out how to get width of string in particular font and size. then use that to centre titles
     2. figure out how to draw strings vertically. for y axis title
-    3. implement sortPointsByX method
-    4. assert points do not have same x value (consider doing this in addPoint method)
-    5. Idk why but the updateMinMax call in drawGraph needs to be there to work. Figure out why
-    6. implement sortPointsByX
+    3. Idk why but the updateMinMax call in drawGraph needs to be there to work. Figure out why
 
 Consider:
     1. if jpanel gets too small (where titles are overlapping axes), don't draw axes titles
@@ -24,6 +21,8 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Point;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import javax.swing.BorderFactory;
 
 /**
@@ -183,7 +182,21 @@ public class LineGraph extends Graph {
     }
     
     private void sortPointsByX(){
-        
+        Collections.sort(points, new PointCompare());
+    }
+    
+    public class PointCompare implements Comparator<Point> {
+
+        @Override
+        public int compare(Point a, Point b) {
+            if (a.x < b.x) {
+                return -1;
+            }else if (a.x > b.x) {
+                return 1;
+            }else {
+                return 0;
+            }
+        }
     }
     
     public void addPoints(ArrayList<Point> ps){
