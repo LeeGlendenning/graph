@@ -130,11 +130,12 @@ public class LineGraph extends Graph {
         float xSpacing = ((float)this.getBounds().width / ptWidth); // size of intervals along x axis
         float ySpacing = ((float)this.getBounds().height / ptHeight); // size of intervals along y axis
         
-        drawPoints(g, xBuff, yBuff, ptWidth, ptHeight, xSpacing, ySpacing);
-        drawAxes(g, xBuff, yBuff, ptWidth, ptHeight, xSpacing, ySpacing);
+        drawPoints(g, xBuff, yBuff, xSpacing, ySpacing);
+        drawAxes(g, xBuff, yBuff, xSpacing, ySpacing);
+        drawTicks(g);
     }
     
-    private void drawPoints(Graphics g, int xBuff, int yBuff, int ptWidth, int ptHeight, float xSpacing, float ySpacing){
+    private void drawPoints(Graphics g, int xBuff, int yBuff, float xSpacing, float ySpacing){
         g.setColor(colour);
         
         for (int i = 0; i < points.size(); i ++){
@@ -153,7 +154,7 @@ public class LineGraph extends Graph {
         }
     }
     
-    private void drawAxes(Graphics g, int xBuff, int yBuff, int ptWidth, int ptHeight, float xSpacing, float ySpacing){
+    private void drawAxes(Graphics g, int xBuff, int yBuff, float xSpacing, float ySpacing){
         g.setColor(Color.BLACK);
         //System.out.println("minX = " + minX + ", maxX = " + maxX);
         
@@ -180,6 +181,14 @@ public class LineGraph extends Graph {
         }else if (maxY >= 0){ // minY is positive so draw x-axis at bottom of graph
             g.drawLine(Math.round(xBuff * xSpacing), this.getBounds().height - Math.round(yBuff * ySpacing), this.getBounds().width - Math.round(xBuff * xSpacing), this.getBounds().height - Math.round(yBuff * ySpacing));
         }
+    }
+    
+    private void drawTicks(Graphics g){
+        
+        // draw at maxY
+        //g.drawLine(Math.round(xBuff * xSpacing), this.getBounds().height - Math.round(yBuff * ySpacing), this.getBounds().width - Math.round(xBuff * xSpacing), this.getBounds().height - Math.round(yBuff * ySpacing));
+
+        
     }
     
     private void sortPointsByX(){
