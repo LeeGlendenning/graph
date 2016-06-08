@@ -5,6 +5,8 @@ import java.awt.Color;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Point;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -25,13 +27,17 @@ public class GraphSimulator {
     private final LineGraph graph;
     private final JButton startButton = new JButton("Start");
     private final JButton stopButton = new JButton("Stop");
+    private final JButton addPointButton = new JButton("Add Point");
     private final JTextField delayField = new JTextField(10);
     private final JTextField boundsField = new JTextField(10);
+    private final JTextField xField = new JTextField(10);
+    private final JTextField yField = new JTextField(10);
     
     public GraphSimulator(String simName){
         frame = new JFrame(simName);
         ArrayList<Point> p = new ArrayList();
-        p.add(new Point(-25,5));
+        p.add(new Point(0,0));
+        /*p.add(new Point(-25,5));
         p.add(new Point(-20,10));
         p.add(new Point(50,90));
         p.add(new Point(160,-120));
@@ -41,7 +47,7 @@ public class GraphSimulator {
         p.add(new Point(130,110));
         p.add(new Point(150,110));
         p.add(new Point(-30,50));
-        p.add(new Point(-100, 0));
+        p.add(new Point(-100, 0));*/
         graph = new LineGraph(p, "Sim Graph", "X", "Y", Color.BLUE);
         initFrame();
         createSimulator();
@@ -94,6 +100,29 @@ public class GraphSimulator {
         simPanel.add(Box.createVerticalStrut(10));
         simPanel.add(buttonPanel);
         
+        
+        
+        
+        
+        // Add bounds field to simulation panel
+        JPanel xPanel = new JPanel(new BorderLayout());
+        xPanel.add(new JLabel("X: "), BorderLayout.WEST);
+        xPanel.add(xField, BorderLayout.EAST);
+        simPanel.add(Box.createVerticalStrut(20));
+        simPanel.add(xPanel);
+        
+        // Add time delay field to simulation panel
+        JPanel yPanel = new JPanel(new BorderLayout());
+        yPanel.add(new JLabel("Y: "), BorderLayout.WEST);
+        yPanel.add(yField, BorderLayout.EAST);
+        simPanel.add(Box.createVerticalStrut(10));
+        simPanel.add(yPanel);
+        
+        simPanel.add(addPointButton);
+        
+        
+        
+        
         JPanel simContainer = new JPanel();
         simContainer.add(simPanel);
         
@@ -109,7 +138,15 @@ public class GraphSimulator {
     }
     
     private void registerListeners(){
-        
+        addPointButton.addActionListener(new ActionListener() {
+ 
+            @Override
+            public void actionPerformed(ActionEvent e){
+                System.out.println("Adding point: " + xField.getText() + ", " + yField.getText());
+                graph.addPoint(new Point(Integer.parseInt(xField.getText()), Integer.parseInt(yField.getText())));
+                
+            }
+        });  
     }
     
 }

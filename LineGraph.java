@@ -130,9 +130,9 @@ public class LineGraph extends Graph {
         float xSpacing = ((float)this.getBounds().width / ptWidth); // size of intervals along x axis
         float ySpacing = ((float)this.getBounds().height / ptHeight); // size of intervals along y axis
         
-        drawPoints(g, xBuff, yBuff, xSpacing, ySpacing);
         drawAxes(g, xBuff, yBuff, xSpacing, ySpacing);
         drawTicks(g);
+        drawPoints(g, xBuff, yBuff, xSpacing, ySpacing);
     }
     
     private void drawPoints(Graphics g, int xBuff, int yBuff, float xSpacing, float ySpacing){
@@ -228,6 +228,7 @@ public class LineGraph extends Graph {
             }else if (p.y < minY){
                 this.minY = p.y;
             }
+            repaint();
         }
     }
     
