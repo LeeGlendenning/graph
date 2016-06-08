@@ -73,7 +73,7 @@ public class LineGraph extends Graph {
     }
     
     private void init(ArrayList<Point> ps){
-        this.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+        //this.setBorder(BorderFactory.createLineBorder(Color.BLACK));
         addPoints(ps);
     }
     

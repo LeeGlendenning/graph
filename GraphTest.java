@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package graph;
 
 import java.awt.Color;
@@ -21,7 +16,8 @@ import javax.swing.JPanel;
  */
 public class GraphTest {
     public static void main(String[] args) {
-        test();
+        GraphSimulator gs = new GraphSimulator("Test Sim");
+        //test();
     }
     
     private static void test(){
@@ -49,8 +45,7 @@ public class GraphTest {
         JFrame f = new JFrame("A Graph");
         f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         Container contentPane = f.getContentPane();
-        JPanel jp = new JPanel();
-        jp.setLayout(new GridLayout(3,3));
+        JPanel jp = new JPanel(new GridLayout(3,3));
         contentPane.add(jp);
         jp.add(new JLabel("a"));
         jp.add(new JLabel("b"));
