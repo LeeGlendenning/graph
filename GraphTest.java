@@ -25,7 +25,7 @@ public class GraphTest {
         /*p.add(new Point(-25,-5));
         p.add(new Point(0,-25));
         p.add(new Point(25,-15));*/
-        p.add(new Point(-40,20));
+        /*p.add(new Point(-40,20));
         p.add(new Point(-40,120)); // won't be plotted because x = -40 like last point
         
         p.add(new Point(-25,5));
@@ -38,7 +38,7 @@ public class GraphTest {
         p.add(new Point(130,110));
         p.add(new Point(150,110));
         p.add(new Point(-30,50));
-        p.add(new Point(-100, 0));
+        p.add(new Point(-100, 0));*/
         
         LineGraph lg = new LineGraph(p, "Test Graph", "X axis title", "Y", Color.BLUE);
         

@@ -124,11 +124,11 @@ public class LineGraph extends Graph {
         int xBuff = Math.round((float)0.1*(maxX - minX)); // 10% of difference between maxX and minX
         int yBuff = Math.round((float)0.1*(maxY - minY)); // 10% of difference between maxY and minY
         
-        int ptWidth = (maxX - minX) + 2*xBuff; // divide graph into ptWidth number of intervals along x axis
-        int ptHeight = (maxY - minY) + 2*yBuff; // divide graph into ptHeight number of intervals along y axis
+        int numXIntervals = (maxX - minX) + 2*xBuff; // divide graph into ptWidth number of intervals along x axis
+        int numYIntervals = (maxY - minY) + 2*yBuff; // divide graph into ptHeight number of intervals along y axis
         
-        float xSpacing = ((float)this.getBounds().width / ptWidth); // size of intervals along x axis
-        float ySpacing = ((float)this.getBounds().height / ptHeight); // size of intervals along y axis
+        float xSpacing = ((float)this.getBounds().width / numXIntervals); // size of intervals along x axis
+        float ySpacing = ((float)this.getBounds().height / numYIntervals); // size of intervals along y axis
         
         drawAxes(g, xBuff, yBuff, xSpacing, ySpacing);
         drawTicks(g);
@@ -156,30 +156,38 @@ public class LineGraph extends Graph {
     
     private void drawAxes(Graphics g, int xBuff, int yBuff, float xSpacing, float ySpacing){
         g.setColor(Color.BLACK);
-        //System.out.println("minX = " + minX + ", maxX = " + maxX);
         
-        int xDiff, yDiff;
+        // draw axes at origin
+        if (points.isEmpty()){
+            // x axis
+            g.drawLine(Math.round(xBuff * xSpacing), Math.round(this.getBounds().height/2), this.getBounds().width - Math.round(xBuff * xSpacing), Math.round(this.getBounds().height/2));
+            // y axis
+            g.drawLine(Math.round(this.getBounds().width/2), this.getBounds().height - Math.round(yBuff * ySpacing), Math.round(this.getBounds().width/2), Math.round(yBuff * ySpacing));
+        }else{
+            // draw axes based on points
+            int xDiff, yDiff;
         
-        // draw x axis
-        if (minX < 0 && maxX > 0){ // x=0 is in our graph so draw y-axis there
-            xDiff = -minX + xBuff;
-            g.drawLine(Math.round(xDiff * xSpacing), Math.round(yBuff * ySpacing), Math.round(xDiff * xSpacing), this.getBounds().height - Math.round(yBuff * ySpacing));
-        }else if (minX <= 0){ // maxX is negative so draw y-axis on right side of graph
-            xDiff = maxX - minX + xBuff;
-            g.drawLine(Math.round(xDiff * xSpacing), Math.round(yBuff * ySpacing), Math.round(xDiff * xSpacing), this.getBounds().height - Math.round(yBuff * ySpacing));
-        }else if (maxX >= 0){ // minX is positive so draw y-axis on left side of graph
-            g.drawLine(Math.round(xBuff * xSpacing), Math.round(yBuff * ySpacing), Math.round(xBuff * xSpacing), this.getBounds().height - Math.round(yBuff * ySpacing));
-        }
-        
-        // draw y axis
-        if (minY < 0 && maxY > 0){ // y=0 is in our graph so draw x-axis there
-            yDiff = -minY + yBuff;
-            g.drawLine(Math.round(xBuff * xSpacing), this.getBounds().height - Math.round(yDiff * ySpacing), this.getBounds().width - Math.round(xBuff * xSpacing), this.getBounds().height - Math.round(yDiff * ySpacing));
-        }else if (minY <= 0){ // maxY is negative so draw x-axis at top of graph
-            yDiff = maxY - minY + yBuff;
-            g.drawLine(Math.round(xBuff * xSpacing), this.getBounds().height - Math.round(yDiff * ySpacing), this.getBounds().width - Math.round(xBuff * xSpacing), this.getBounds().height - Math.round(yDiff * ySpacing));
-        }else if (maxY >= 0){ // minY is positive so draw x-axis at bottom of graph
-            g.drawLine(Math.round(xBuff * xSpacing), this.getBounds().height - Math.round(yBuff * ySpacing), this.getBounds().width - Math.round(xBuff * xSpacing), this.getBounds().height - Math.round(yBuff * ySpacing));
+            // draw x axis
+            if (minX < 0 && maxX > 0){ // x=0 is in our graph so draw y-axis there
+                xDiff = -minX + xBuff;
+                g.drawLine(Math.round(xDiff * xSpacing), Math.round(yBuff * ySpacing), Math.round(xDiff * xSpacing), this.getBounds().height - Math.round(yBuff * ySpacing));
+            }else if (minX <= 0){ // maxX is negative so draw y-axis on right side of graph
+                xDiff = maxX - minX + xBuff;
+                g.drawLine(Math.round(xDiff * xSpacing), Math.round(yBuff * ySpacing), Math.round(xDiff * xSpacing), this.getBounds().height - Math.round(yBuff * ySpacing));
+            }else if (maxX >= 0){ // minX is positive so draw y-axis on left side of graph
+                g.drawLine(Math.round(xBuff * xSpacing), Math.round(yBuff * ySpacing), Math.round(xBuff * xSpacing), this.getBounds().height - Math.round(yBuff * ySpacing));
+            }
+
+            // draw y axis
+            if (minY < 0 && maxY > 0){ // y=0 is in our graph so draw x-axis there
+                yDiff = -minY + yBuff;
+                g.drawLine(Math.round(xBuff * xSpacing), this.getBounds().height - Math.round(yDiff * ySpacing), this.getBounds().width - Math.round(xBuff * xSpacing), this.getBounds().height - Math.round(yDiff * ySpacing));
+            }else if (minY <= 0){ // maxY is negative so draw x-axis at top of graph
+                yDiff = maxY - minY + yBuff;
+                g.drawLine(Math.round(xBuff * xSpacing), this.getBounds().height - Math.round(yDiff * ySpacing), this.getBounds().width - Math.round(xBuff * xSpacing), this.getBounds().height - Math.round(yDiff * ySpacing));
+            }else if (maxY >= 0){ // minY is positive so draw x-axis at bottom of graph
+                g.drawLine(Math.round(xBuff * xSpacing), this.getBounds().height - Math.round(yBuff * ySpacing), this.getBounds().width - Math.round(xBuff * xSpacing), this.getBounds().height - Math.round(yBuff * ySpacing));
+            }
         }
     }
     

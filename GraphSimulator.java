@@ -36,7 +36,7 @@ public class GraphSimulator {
     public GraphSimulator(String simName){
         frame = new JFrame(simName);
         ArrayList<Point> p = new ArrayList();
-        p.add(new Point(0,0));
+        //p.add(new Point(0,0));
         /*p.add(new Point(-25,5));
         p.add(new Point(-20,10));
         p.add(new Point(50,90));
