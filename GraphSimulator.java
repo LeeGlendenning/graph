@@ -28,6 +28,7 @@ public class GraphSimulator {
     private final JButton startButton = new JButton("Start");
     private final JButton stopButton = new JButton("Stop");
     private final JButton addPointButton = new JButton("Add Point");
+    private final JButton clearGraphButton = new JButton("Clear");
     private final JTextField delayField = new JTextField(10);
     private final JTextField boundsField = new JTextField(10);
     private final JTextField xField = new JTextField(10);
@@ -56,6 +57,7 @@ public class GraphSimulator {
     }
     
     private void initFrame(){
+        frame.setSize(500, 500);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
     
@@ -100,9 +102,11 @@ public class GraphSimulator {
         simPanel.add(Box.createVerticalStrut(10));
         simPanel.add(buttonPanel);
         
+        simPanel.add(Box.createVerticalStrut(30));
         
-        
-        
+        JPanel titlePanel2 = new JPanel();
+        titlePanel2.add(new JLabel("Single Point Generator"));
+        simPanel.add(titlePanel2);
         
         // Add bounds field to simulation panel
         JPanel xPanel = new JPanel(new BorderLayout());
@@ -120,6 +124,10 @@ public class GraphSimulator {
         
         simPanel.add(addPointButton);
         
+        JPanel clearPanel = new JPanel();
+        clearPanel.add(clearGraphButton);
+        clearPanel.add(Box.createVerticalStrut(50));
+        simPanel.add(clearPanel);
         
         
         
@@ -132,6 +140,7 @@ public class GraphSimulator {
         
         // Prepare and show the JFrame
         frame.setPreferredSize(new Dimension(600, 400));
+        frame.setMinimumSize(new Dimension(600, 400));
         frame.pack();
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
@@ -146,7 +155,17 @@ public class GraphSimulator {
                 graph.addPoint(new Point(Integer.parseInt(xField.getText()), Integer.parseInt(yField.getText())));
                 
             }
-        });  
+        });
+        
+        clearGraphButton.addActionListener(new ActionListener() {
+ 
+            @Override
+            public void actionPerformed(ActionEvent e){
+                System.out.println("Clearing graph...");
+                graph.removeAllPoints();
+                
+            }
+        });
     }
     
 }

@@ -55,7 +55,6 @@ public class LineGraph extends Graph {
         this.yAxisLabel = yAxis;
         this.colour = colour;
         init(ps); // set man/min xy and border for this JComponent
-        
     }
 
     /*
@@ -74,7 +73,7 @@ public class LineGraph extends Graph {
     
     private void init(ArrayList<Point> ps){
         //this.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-        addPoints(ps);
+        addPointList(ps);
     }
     
     @Override
@@ -176,6 +175,11 @@ public class LineGraph extends Graph {
         }
     }
     
+    public void removeAllPoints() {
+        points.clear();
+        repaint();
+    }
+    
     private void drawAxes(Graphics g, int xBuff, int yBuff, float xIntervalSpacing, float yIntervalSpacing){
         g.setColor(Color.BLACK);
         
@@ -248,14 +252,14 @@ public class LineGraph extends Graph {
         }
     }
     
-    public void addPoints(ArrayList<Point> ps){
+    public void addPointList(ArrayList<Point> ps){
         for (int i = 0; i < ps.size(); i ++){
             addPoint(ps.get(i));
         }
     }
     
     public void addPoint(Point p){
-        if (pointIsAllowed(p)){
+        if (!pointIsXDuplicate(p)){
             points.add(new Point(p.x, p.y));
             if (maxX == null || p.x > maxX){
                 this.maxX = p.x;
@@ -274,14 +278,14 @@ public class LineGraph extends Graph {
         }
     }
     
-    // returns false if a point with the given x value already exists in points ArrayList
-    private boolean pointIsAllowed(Point p){
+    // returns true if a point with the given x value already exists in points ArrayList
+    private boolean pointIsXDuplicate(Point p){
         for (int i = 0; i < points.size(); i ++){
             if (points.get(i).x == p.x){
-                return false;
+                return true;
             }
         }
-        return true;
+        return false;
     }
     
     @Override
